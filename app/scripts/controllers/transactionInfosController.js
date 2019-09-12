@@ -11,33 +11,40 @@ angular.module('ethExplorer')
 
                 getTransactionInfos()
                     .then(function(result){
+
+                    var txResult = result.txResult;
+                    var txRecieptResult = result.txRecieptResult;
                         //TODO Refactor this logic, asynchron calls + services....
                         var number = web3.eth.blockNumber;
 
-                    $scope.result = result;
+                    $scope.result = txResult;
 
-                    if(result.blockHash!==undefined){
-                        $scope.blockHash = result.blockHash;
+                    if(txResult.blockHash!==undefined){
+                        $scope.blockHash = txResult.blockHash;
                     }
                     else{
                         $scope.blockHash ='pending';
                     }
-                    if(result.blockNumber!==undefined){
-                        $scope.blockNumber = result.blockNumber;
+                    if(txResult.blockNumber!==undefined){
+                        $scope.blockNumber = txResult.blockNumber;
                     }
                     else{
                         $scope.blockNumber ='pending';
                     }
-                    $scope.from = result.from;
-                    $scope.gas = result.gas;
-                    $scope.gasPrice = result.gasPrice.c[0] + " WEI";
-                    $scope.hash = result.hash;
-                    $scope.input = result.input; // that's a string
-                    $scope.nonce = result.nonce;
-                    $scope.to = result.to;
-                    $scope.transactionIndex = result.transactionIndex;
-                    $scope.ethValue = result.value.c[0] / 10000; 
-                    $scope.txprice = (result.gas * result.gasPrice)/1000000000000000000 + " ETH";
+                    $scope.from = txResult.from;
+                    $scope.gas = txResult.gas;
+                    $scope.gasPrice = txResult.gasPrice.c[0] + " WEI";
+                    $scope.hash = txResult.hash;
+                    $scope.input = txResult.input; // that's a string
+                    $scope.nonce = txResult.nonce;
+                    $scope.to = txResult.to;
+                    $scope.transactionIndex = txResult.transactionIndex;
+                    $scope.ethValue = txResult.value.c[0] / 10000; 
+                    $scope.txprice = (txResult.gas * txResult.gasPrice)/1000000000000000000 + " ETH";
+                    $scope.status = txRecieptResult.status;
+                    $scope.gasUsed = txRecieptResult.gasUsed;
+                    $scope.contractAddress = txRecieptResult.contractAddress;
+                    $scope.logs = txRecieptResult.logs;
                     if($scope.blockNumber!==undefined){
                         $scope.conf = number - $scope.blockNumber;
                         if($scope.conf===0){
@@ -66,12 +73,20 @@ angular.module('ethExplorer')
             function getTransactionInfos(){
                 var deferred = $q.defer();
 
-                web3.eth.getTransaction($scope.txId,function(error, result) {
-                    if(!error){
-                        deferred.resolve(result);
+                web3.eth.getTransaction($scope.txId,function(txError, txResult) {
+                    if(!txError){
+
+                      web3.eth.getTransactionReceipt($scope.txId, function(txRecieptError, txRecieptResult) {
+                        if(!txRecieptError){
+                          deferred.resolve({txResult, txRecieptResult});
+                        }
+                        else{
+                          deferred.reject(txRecieptError);
+                        }
+                      });
                     }
                     else{
-                        deferred.reject(error);
+                        deferred.reject(txError);
                     }
                 });
                 return deferred.promise;
@@ -82,6 +97,5 @@ angular.module('ethExplorer')
 
         };
         $scope.init();
-        console.log($scope.result);
 
     });

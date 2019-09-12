@@ -53,8 +53,16 @@
                 </td>
             </tr>
             <tr>
-                <td>Gas Used</td>
+                <td>Status</td>
+                <td>{{status}} {{ status ? (status === '0x1' ? '✅' : '❌') : ''}}</td>
+            </tr>
+            <tr>
+                <td>Gas</td>
                 <td>{{gas}}</td>
+            </tr>
+            <tr>
+                <td>Gas Used</td>
+                <td>{{gasUsed}}</td>
             </tr>
             <tr>
                 <td>Gas Price</td>
@@ -72,8 +80,14 @@
                 <td>Data</td>
                 <td>{{input}}</td>
             </tr>
-
-
+            <tr>
+                <td>Contract Address</td>
+                <td><a href="./#/address/{{contractAddress}}">{{contractAddress}}</a></td>
+            </tr>
+            <tr>
+                <td>Logs</td>
+                <td>{{JSON.stringify(logs || '', null, 2)}}</td>
+            </tr>
             </tbody>
         </table>
     </div>

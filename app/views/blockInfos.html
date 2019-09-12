@@ -90,9 +90,17 @@
               <td><a href="./#/address/{{tx.to}}">{{tx.to}}</a></td>
           </tr>
           <tr>
-              <td>Gas</td>
-              <td>{{tx.gas}}</a></td>
+            <td>Status</td>
+            <td>{{tx.status}} {{ tx.status ? (tx.status === '0x1' ? '✅' : '❌') : ''}}</td>
           </tr>
+          <tr>
+              <td>Gas Used</td>
+              <td>{{tx.gasUsed}}</a></td>
+          </tr>
+          <tr>
+            <td>Gas</td>
+            <td>{{tx.gas}}</a></td>
+        </tr>
           <tr>
               <td>Input</td>
               <td>{{tx.input}}</a></td>

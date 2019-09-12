@@ -91,18 +91,23 @@ angular.module('ethExplorer')
           for (var blockIdx = 0; blockIdx < txCount; blockIdx++) {
             web3.eth.getTransactionFromBlock($scope.blockId, blockIdx, function(error, result) {
 
-              var transaction = {
-                id: result.hash,
-                hash: result.hash,
-                from: result.from,
-                to: result.to,
-                gas: result.gas,
-                input: result.input,
-                value: result.value
-              }
-              $scope.$apply(
-                $scope.transactions.push(transaction)
-              )
+                web3.eth.getTransactionReceipt(result.hash, function(error, recieptResult) {
+
+                    var transaction = {
+                        id: result.hash,
+                        hash: result.hash,
+                        from: result.from,
+                        to: result.to,
+                        gas: result.gas,
+                        input: result.input,
+                        value: result.value,
+                        status: recieptResult.status,
+                        gasUsed: recieptResult.gasUsed
+                    }
+                    $scope.$apply(
+                        $scope.transactions.push(transaction)
+                    )
+                })
             })
           }
         })
