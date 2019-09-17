@@ -14,8 +14,12 @@ angular.module('ethExplorer')
 
                     var txResult = result.txResult;
                     var txRecieptResult = result.txRecieptResult;
-                        //TODO Refactor this logic, asynchron calls + services....
-                        var number = web3.eth.blockNumber;
+
+                    console.log('txResult', txResult);
+                    console.log('txRecieptResult', txRecieptResult);
+
+                    //TODO Refactor this logic, asynchron calls + services....
+                    var number = web3.eth.blockNumber;
 
                     $scope.result = txResult;
 
